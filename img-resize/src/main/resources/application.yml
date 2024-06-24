@@ -1,0 +1,77 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/my_project1?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: sy
+    password: 0719
+
+  jpa:
+    open-in-view: true
+    hibernate:
+      ddl-auto: create
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      use-new-id-generator-mappings: false
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+      dialect: org.hibernate.dialect.MySQL8InnoDBDialect
+  servlet:
+    multipart:
+      max-file-size: 50MB  # 개별 파일 최대 크기 설정
+      max-request-size: 500MB  # 요청 전체 크기(모든 파일 포함) 최대 크기 설정
+  upload:
+    directory: D:\Lifezip\img-resize_sy\
+
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+
+---
+
+springdoc:
+  swagger-ui:
+    path: /image-resize
+    groups-order: DESC
+    operationsSorter: method
+    disable-swagger-default-url: true
+    display-request-duration: true
+  api-docs:
+    path: /api-docs
+  show-actuator: true
+  default-consumes-media-type: multipart/form-data  # 파일 업로드를 지원하는 API의 기본 요청 미디어 유형
+  default-produces-media-type: application/json
+  paths-to-match:
+    - /v1/**
+  openapi: 3.0.1
+  info:
+    title: Image Resize API
+    version: 1.0.0
+  paths:
+    /v1/image-resize:
+      post:
+        summary: Upload images for resizing
+        operationId: postImages
+        requestBody:
+          required: true
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  originImages:
+                    type: array
+                    items:
+                      type: string
+                      format: binary
+        responses:
+          '200':
+            description: Successful operation
+            content:
+              application/json:
+                schema:
+                  type: string
+          '400':
+            description: Bad request
+
