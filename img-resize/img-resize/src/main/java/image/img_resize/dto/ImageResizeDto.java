@@ -30,10 +30,16 @@ public class ImageResizeDto {
         public static class NewImages {
 
             private List<MultipartFile> newUploadImages;
+            private String resizeWidth;
+            private String resizeHeight;
+            private String reSize;
 
-            public NewImages getNewImage(List<MultipartFile> newUploadImages) {
+            public NewImages getNewImage(List<MultipartFile> newUploadImages, String resizeWidth, String resizeHeight, String reSize) {
                 return NewImages.builder()
                         .newUploadImages(newUploadImages)
+                        .resizeWidth(resizeWidth)
+                        .resizeHeight(resizeHeight)
+                        .reSize(reSize)
                         .build();
             }
 

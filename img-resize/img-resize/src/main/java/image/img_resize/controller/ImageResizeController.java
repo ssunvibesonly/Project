@@ -1,5 +1,12 @@
 package image.img_resize.controller;
 
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.Directory;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.MetadataException;
+import com.drew.metadata.exif.ExifIFD0Directory;
+import com.drew.metadata.jpeg.JpegDirectory;
 import image.img_resize.dto.ImageResizeDto;
 import image.img_resize.service.ImageResizeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,7 +48,7 @@ public class ImageResizeController {
     @Operation(summary = "Post Images", description = "이미지 리사이징을 위해 원본 이미지 업로드")
     public ResponseEntity<ImageResizeDto.Response.NewImages> postOriginImage(
             @Valid @Parameter(required = true, content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE))
-            @RequestPart(value = "originImages", required = false) List<MultipartFile> originalImages) {
+            @RequestPart(value = "originImages", required = false) List<MultipartFile> originalImages) throws IOException, ImageProcessingException, MetadataException {
 
         //원본 이미지 받아오는지 확인용
         for (MultipartFile originImage : originalImages) {
@@ -50,7 +57,6 @@ public class ImageResizeController {
 
         //리사이징된 이미지 리스트 반환
         List<MultipartFile> resizeImages = service.postNewImage(originalImages);
-
 
         //반환된 리스트 폴더에 업로드
         LocalDate localDate = LocalDate.now();
@@ -65,6 +71,9 @@ public class ImageResizeController {
         // 오늘 날짜 디렉토리 경로 설정
         Path path = Paths.get(childPath);
 
+        Metadata metadata;
+        Directory directory;
+        JpegDirectory jpegDirectory;
 
         try {
 
@@ -79,31 +88,35 @@ public class ImageResizeController {
                     File uploadFile = new File(childPath, resizeImage.getName());
                     resizeImage.transferTo(uploadFile);
 
-                    log.info("업로드 된 파일 리스트 : " + uploadFile);
+                    metadata = ImageMetadataReader.readMetadata(uploadFile);
+                    directory = metadata.getFirstDirectoryOfType(ExifIFD0Directory.class);
+                    jpegDirectory = metadata.getFirstDirectoryOfType(JpegDirectory.class);
+
+
                 }
+
 
             }
 
-            //디렉토리가 이미 생성되어 있고, 폴더명이 오늘 날짜와 같다면 이미지만 추가
-            if (Files.exists(path)) {
-                log.info("이미 디렉토리가 있습니다.");
-                for (MultipartFile resizeImage : resizeImages) {
+        } catch (Exception e) {
+            e.printStackTrace();
 
-                    File uploadFile = new File(childPath, resizeImage.getName());
-                    resizeImage.transferTo(uploadFile);
+        }
 
-                    log.info("업로드 된 파일 리스트 : " + uploadFile);
-                }
+        //디렉토리가 이미 생성되어 있고, 폴더명이 오늘 날짜와 같다면 이미지만 추가
+        if (Files.exists(path)) {
+            log.info("이미 디렉토리가 있습니다.");
+            for (MultipartFile resizeImage : resizeImages) {
+
+                File uploadFile = new File(childPath, resizeImage.getName());
+                resizeImage.transferTo(uploadFile);
+
+                log.info("업로드 된 파일 리스트 : " + uploadFile);
             }
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
 
 
         //new ImageResizeDto.Response.NewImages(resizeImage)
         return null;
     }
-
-
 }

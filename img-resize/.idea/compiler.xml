@@ -12,8 +12,8 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="img-resize.img-resize.main~1" target="17" />
-      <module name="img-resize.img-resize.test~1" target="17" />
+      <module name="img-resize.img-resize.main~1" target="21" />
+      <module name="img-resize.img-resize.test~1" target="21" />
     </bytecodeTargetLevel>
   </component>
 </project>

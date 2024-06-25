@@ -38,9 +38,14 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.springframework/spring-mock
 	testImplementation group: 'org.springframework', name: 'spring-mock', version: '2.0.8'
 
-	// commons-io 파일 입출력을 도와줌
-	implementation 'commons-fileupload:commons-fileupload:1.4'
-	implementation 'commons-io:commons-io:2.11.0'
+	// https://mvnrepository.com/artifact/net.coobird/thumbnailator
+	implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.20'
+
+	// https://mvnrepository.com/artifact/com.drewnoakes/metadata-extractor -> 세로이미지 가로로 회전되어 나오는 문제 해결을 위해 import
+	implementation group: 'com.drewnoakes', name: 'metadata-extractor', version: '2.18.0'
+
+
+
 
 
 
