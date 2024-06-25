@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/my_project1?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: sy
-    password: 0719
+    url: jdbc:mysql://localhost:3306/secret?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: secret
+    password: secret
 
   jpa:
     open-in-view: true
@@ -21,7 +21,7 @@ spring:
       max-file-size: 50MB  # 개별 파일 최대 크기 설정
       max-request-size: 500MB  # 요청 전체 크기(모든 파일 포함) 최대 크기 설정
   upload:
-    directory: D:\Lifezip\img-resize_sy\
+    directory: D:\secret\img-resize_sy\
 
 
 logging:
